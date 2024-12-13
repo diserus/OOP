@@ -15,7 +15,7 @@ AVLTree::~AVLTree() {
 }
 
 int AVLTree::getNodeHeight(AVLNode* node) const {
-    return node ? node->height : 0;
+    return node->height;
 }
 
 void AVLTree::updateHeight(AVLNode* node) {

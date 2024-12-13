@@ -36,10 +36,7 @@ int main()
             std::cout << "Слово не найдено в словаре" << std::endl;
         }
     }
-
-
-    std::cout << "\nОбход дерева:" << std::endl;
-    printTree(dict.getTree());
+    
     std::cout << "Программа завершена" << std::endl;
     return 0;
 }
