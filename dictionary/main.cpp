@@ -10,30 +10,36 @@ int main()
     system("chcp 65001");
     
     Dictionary dict;
-    dict.fillDictionary("ENRUS.TXT");
-    
-    std::cout << "Словарь загружен. Всего слов: " << dict.getWordCount() << std::endl;
+    try {
+        dict.fillDictionary("ENRUS.TXT");
+        std::cout << "Словарь загружен. Всего слов: " << dict.getWordCount() << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Ошибка: " << e.what() << std::endl;
+        return 1;
+    }
     
     std::string word;
     
     while (true)
     {
-        std::cout << "\nВведите слово для перевода (или ESC для выхода): ";
+        std::cout << "\nВведите слово для перевода (ничего не вводить для выхода): ";
         std::getline(std::cin, word);
         
-
         if (word.empty() || word[0] == 27)
             break;
         
-        std::string *translation = dict.translate(word);
-        
-        if (translation)
-        {
-            std::cout << "Перевод: " << *translation << std::endl;
+        try {
+            std::string* translation = dict.translate(word);
+            if (translation) {
+                std::cout << "Перевод: " << *translation << std::endl;
+            }
+            else {
+                std::cout << "Слово не найдено в словаре" << std::endl;
+            }
         }
-        else
-        {
-            std::cout << "Слово не найдено в словаре" << std::endl;
+        catch (const std::exception& e) {
+            std::cerr << "Ошибка при переводе: " << e.what() << std::endl;
         }
     }
     

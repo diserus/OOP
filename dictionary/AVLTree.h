@@ -9,8 +9,7 @@ private:
         int height;
         AVLNode(const std::string &k, const std::string &v) : BinaryTree::Node(k, v), height(1) {}
     };
-
-    AVLNode* root;
+    
     void deleteTree(Node* node);
     AVLNode* insertNode(AVLNode* node, const std::string& k, const std::string& v);
     AVLNode* removeNode(AVLNode* node, const std::string& k);

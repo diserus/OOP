@@ -7,14 +7,42 @@ Dictionary::Dictionary() {}
 Dictionary::Dictionary(const Dictionary& other) : tree(other.tree) {}
 
 void Dictionary::fillDictionary(const std::string& filename) {
-    std::ifstream file(filename);
-    std::string english, russian;
-    
-    while (std::getline(file, english) && std::getline(file, russian)) {
-        addWord(english, russian);
+    try {
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw std::runtime_error("Не удалось открыть файл: " + filename);
+        }
+
+        std::string english, russian;
+        while (std::getline(file, english)) {
+            if (english.empty()) {
+                continue;
+            }
+            
+            if (!std::getline(file, russian)) {
+                throw std::runtime_error("Неправильный формат файла: отсутствует перевод для слова '" + english + "'");
+            }
+            
+            if (!russian.empty()) {
+                addWord(english, russian);
+            }
+        }
+
+        if (file.bad()) {
+            throw std::runtime_error("Ошибка при чтении файла");
+        }
+
+        file.close();
+        
+        if (getWordCount() == 0) {
+            throw std::runtime_error("Словарь пуст: не найдено ни одной валидной пары слов");
+        }
     }
-    file.close();
+    catch (const std::exception& e) {
+        throw std::runtime_error("Ошибка при загрузке словаря: " + std::string(e.what()));
+    }
 }
+
 void Dictionary::addWord(const std::string& english, const std::string& russian) {
     if (!translate(english)) {
         wordCount++;

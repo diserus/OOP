@@ -1,6 +1,6 @@
 #include "AVLTree.h"
 
-AVLTree::AVLTree() : root(nullptr) {}
+AVLTree::AVLTree() : BinaryTree() {}
 
 void AVLTree::deleteTree(Node* node) {
     if (node) {
@@ -15,6 +15,7 @@ AVLTree::~AVLTree() {
 }
 
 int AVLTree::getNodeHeight(AVLNode* node) const {
+    if (!node) return 0;
     return node->height;
 }
 
@@ -33,6 +34,8 @@ int AVLTree::getBalance(AVLNode* node) const {
 }
 
 AVLTree::AVLNode* AVLTree::rightRotate(AVLNode* y) {
+    if (!y || !y->left) return y;
+    
     AVLNode* x = static_cast<AVLNode*>(y->left);
     AVLNode* T2 = static_cast<AVLNode*>(x->right);
 
@@ -46,6 +49,8 @@ AVLTree::AVLNode* AVLTree::rightRotate(AVLNode* y) {
 }
 
 AVLTree::AVLNode* AVLTree::leftRotate(AVLNode* x) {
+    if (!x || !x->right) return x;
+    
     AVLNode* y = static_cast<AVLNode*>(x->right);
     AVLNode* T2 = static_cast<AVLNode*>(y->left);
 
@@ -95,11 +100,11 @@ AVLTree::AVLNode* AVLTree::insertNode(AVLNode* node, const std::string& k, const
 }
 
 void AVLTree::insert(const std::string& key, const std::string& value) {
-    root = insertNode(root, key, value);
+    root = static_cast<Node*>(insertNode(static_cast<AVLNode*>(root), key, value));
 }
 
 std::string* AVLTree::find(const std::string& key) {
-    AVLNode* current = root;
+    AVLNode* current = static_cast<AVLNode*>(root);
     while (current) {
         if (key < current->key)
             current = static_cast<AVLNode*>(current->left);
@@ -166,12 +171,12 @@ AVLTree::AVLNode* AVLTree::removeNode(AVLNode* node, const std::string& k) {
 bool AVLTree::remove(const std::string& key) {
     bool existed = find(key) != nullptr;
     if (existed)
-        root = removeNode(root, key);
+        root = static_cast<Node*>(removeNode(static_cast<AVLNode*>(root), key));
     return existed;
 }
 
 int AVLTree::getHeight() const {
-    return getNodeHeight(root);
+    return getNodeHeight(static_cast<AVLNode*>(root));
 }
 
 void inOrderTraversal(AVLTree::AVLNode* node) {
@@ -182,6 +187,7 @@ void inOrderTraversal(AVLTree::AVLNode* node) {
 }
 
 void printTree(AVLTree &tree) {
-    if (tree.root == nullptr) return;
-    inOrderTraversal(tree.root);
+    AVLTree::AVLNode* avlRoot = static_cast<AVLTree::AVLNode*>(tree.root);
+    if (avlRoot == nullptr) return;
+    inOrderTraversal(avlRoot);
 }
